@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101116"><title>LIFE ASSISTANT</title>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101116"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="LIFE ASSISTANT"><title>LIFE ASSISTANT</title>
 <style>
 :root{color-scheme:dark;--bg:#0b0d14;--panel:#151a27;--panel2:#1b2232;--muted:#929bb0;--accent:#9b8cff;--accent2:#6d5ce8;--line:#293247;--text:#f4f5fb;--green:#55d6a2;--red:#ff7d91}
 *{box-sizing:border-box}
@@ -102,4 +102,5 @@ function renderCalendar(){const d=new Date(),y=d.getFullYear(),m=d.getMonth(),n=
 function planWeek(){const tasks=data.tasks.filter(t=>!t.done);if(!tasks.length){$('weekPlan').textContent='Нет незавершённых задач. Сначала добавь задачи.';return;}const names=['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'],start=(new Date().getDay()+6)%7;data.weekPlan=tasks.map((t,i)=>({day:names[(start+i)%7],text:t.text}));$('weekPlan').innerHTML=data.weekPlan.map(x=>'<div><b>'+x.day+'</b>: '+esc(x.text)+'</div>').join('');localStorage.setItem('lifeAssistant',JSON.stringify(data));}
 
 renderCalendar();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 </script></body></html>
