@@ -36,6 +36,31 @@ html,body{background:radial-gradient(ellipse at 50% -18%,#30205b 0%,#111126 35%,
 .reel-meta{display:flex;justify-content:space-between;align-items:center;padding:10px 3px 2px;font-size:12px}
 .reel-feed{padding-bottom:20px}.reels-upload{margin:0 12px 16px}
 @media(min-width:620px){.reel-card{max-width:460px;margin:16px auto}}
+ 
+/* Profile concept 01: neon creator profile */
+.profile-cover{height:205px;position:relative;overflow:hidden;margin:0 0 0;background:linear-gradient(120deg,rgba(8,7,20,.15),rgba(8,7,20,.82)),radial-gradient(ellipse at 72% 25%,#ff8a46 0%,#74366e 24%,#25204d 48%,#090b1b 78%);border-bottom:1px solid rgba(191,145,255,.35)}
+.profile-cover:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 25%,rgba(6,5,17,.82)),repeating-linear-gradient(115deg,transparent 0 38px,rgba(255,255,255,.035) 39px 40px);clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.profile-cover:after{content:"";position:absolute;width:220px;height:100px;right:4%;bottom:12px;border-radius:60% 60% 10% 10%;background:linear-gradient(160deg,#25253c,#080912 70%);border-top:3px solid #a56bff;box-shadow:0 0 35px #a04dff55;transform:perspective(180px) rotateX(8deg)}
+.profile-cover-top{position:absolute;z-index:2;top:15px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:2px;color:#e8dfff}
+.profile-icon-btn{border:1px solid #c5a0ff77;background:#17102eaa;color:#fff;border-radius:20px;padding:8px 12px;font-size:11px}
+.profile-cover-title{position:absolute;z-index:2;left:18px;bottom:24px;font-size:19px;line-height:1.05;letter-spacing:1px;color:#fff;text-shadow:0 3px 16px #000}
+.profile-cover-title b{color:#d4b0ff}
+.profile-main{padding:0 14px 18px;background:linear-gradient(180deg,rgba(16,12,35,.96),rgba(8,8,20,.9))}
+.profile-identity{display:flex;align-items:center;gap:11px;flex-wrap:wrap;padding:0 2px 12px;margin-top:-34px;position:relative;z-index:3}
+.profile-avatar-wrap{position:relative;width:82px;height:82px;flex:none}
+.profile-avatar{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;font-size:33px;color:#fff;background:linear-gradient(140deg,#ff8bb9,#7e52d7 60%,#263d85);border:4px solid #100d25;box-shadow:0 0 22px #9d65ff66;background-size:cover;background-position:center}
+.avatar-change{position:absolute;right:-2px;bottom:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#9b65ff;border:2px solid #100d25;color:#fff;font-size:17px}
+.profile-identity-text{min-width:0;flex:1;padding-top:26px}.profile-identity-text h2{font-size:18px;margin:0 0 4px;overflow-wrap:anywhere}.profile-handle{font-size:11px;color:#aaa4c3}
+.profile-follow-btn{margin:28px 0 0;border:1px solid #a98aff;background:#25164b;color:#fff;border-radius:10px;padding:9px 11px;font-size:10px;font-weight:700}
+.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:12px 4px;border-top:1px solid #ffffff17;border-bottom:1px solid #ffffff17;text-align:center}
+.profile-stats b{display:block;font-size:17px;color:#fff}.profile-stats span{display:block;font-size:9px;color:#aaa4c3;margin-top:3px}
+.profile-bio{font-size:12px;line-height:1.5;padding:13px 3px 5px;color:#e4e0f2;white-space:pre-wrap}.profile-bio a{display:block;color:#bd9aff;margin-top:4px;text-decoration:none}
+.profile-edit-box{padding:10px 0 4px}.profile-edit-box .field{margin:5px 0}
+.profile-highlights{display:flex;gap:18px;overflow:auto;padding:14px 2px 16px;scrollbar-width:none}.profile-highlight{min-width:58px;text-align:center;font-size:10px;color:#c7c1d8}.highlight-circle{width:55px;height:55px;border-radius:50%;border:1px solid #9d76e8;padding:3px;display:grid;place-items:center;font-size:22px;background:linear-gradient(140deg,#35245c,#11152b);margin-bottom:6px;box-shadow:0 0 14px #8b5cff22}
+.profile-tabs{display:flex;justify-content:space-around;border-top:1px solid #ffffff1a;border-bottom:1px solid #ffffff1a}.profile-tab{flex:1;background:none;border:0;padding:13px 2px;color:#938ba9;font-size:10px;border-bottom:2px solid transparent}.profile-tab.active{color:#d6baff;border-bottom-color:#a875ff}
+.profile-content-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding-top:4px;min-height:112px}.profile-grid-item{aspect-ratio:1;background:linear-gradient(140deg,#372452,#19284c 55%,#101020);display:grid;place-items:center;font-size:28px;overflow:hidden}.profile-grid-item img,.profile-grid-item video{width:100%;height:100%;object-fit:cover}.profile-empty{grid-column:1/-1;text-align:center;padding:36px 8px;color:#918aa7;font-size:11px}
+.profile-settings{margin:12px!important;padding:14px!important}.profile-settings summary{cursor:pointer;list-style:none}.profile-settings summary::-webkit-details-marker{display:none}
+@media(min-width:620px){.profile-cover{border-radius:18px 18px 0 0}.profile-main{border-radius:0 0 18px 18px}.profile-cover:after{right:18%}}
 </style></head>
 <body>
 <header class="top"><div class="brand">NOVA<span>CHAT</span><small>FRIENDS • MOMENTS • MUSIC</small></div><div class="topright"><button class="round" onclick="toast('Уведомления появятся после подключения сервера')">♧<i class="dot"></i></button><button class="round" onclick="show('profile')">◎</button></div></header>
@@ -50,21 +75,51 @@ html,body{background:radial-gradient(ellipse at 50% -18%,#30205b 0%,#111126 35%,
 <section id="feed" class="page"><div class="welcome"><div class="eyebrow">NOVA COMMUNITY</div><h1>Новая публикация</h1><p class="sub">Поделись фото или мыслью с друзьями.</p></div><div class="cosmic-card feed-compose"><textarea class="field" id="postText" placeholder="О чём думаешь сегодня?"></textarea><div class="action-row"><label class="file-label">＋ Фото <input id="photo" type="file" accept="image/*" hidden></label><button class="pillbtn" onclick="publish()">Опубликовать</button></div><div id="photoName" class="muted"></div></div><div id="posts"></div></section>
 <section id="chats" class="page"><div class="welcome"><div class="eyebrow">PRIVATE MESSAGES</div><h1>Твои <em>диалоги.</em></h1><p class="sub">Место для разговоров без лишнего шума.</p></div><div class="cosmic-card panel"><div class="panel-title">Недавние чаты</div><div id="chatlist"></div></div><div class="cosmic-card chat-view"><div class="panel-title" id="chatname">Выбери диалог</div><div class="messages" id="msgs"><div class="muted">Открой чат, чтобы начать переписку.</div></div><div class="sendrow"><input class="field" id="msg" placeholder="Написать сообщение…"><button class="pillbtn" onclick="send()" style="margin:0">➤</button></div></div></section>
 <section id="music" class="page"><div class="welcome"><div class="eyebrow">SOUND OF YOUR UNIVERSE</div><h1>Поймай <em>ритм.</em></h1><p class="sub">Добавь музыку с устройства и включи свой саундтрек.</p></div><div class="cosmic-card music-visual"><div class="album">♫</div><div class="eyebrow">NOW PLAYING</div><h2 id="track">Твой следующий трек</h2><p class="muted">Личная музыкальная коллекция</p><input class="field" type="file" id="audiofile" accept="audio/*"><audio id="player" controls></audio></div><div class="cosmic-card panel"><div class="panel-title">Вместе звучит лучше</div><p class="muted">Совместные комнаты прослушивания и музыкальные подборки друзей добавим при подключении серверной части.</p></div></section>
-<section id="profile" class="page"><div class="welcome"><div class="eyebrow">YOUR NOVA ID</div><h1>Твой <em>профиль.</em></h1></div><div class="cosmic-card profile-hero"><div class="profile-orb">✦</div><h2 id="profileTitle">Космический гость</h2><p class="muted">Участник NovaChat</p><input class="field" id="nick" placeholder="Как тебя называть?"><button class="pillbtn" onclick="saveNick()">Сохранить профиль</button></div>
-<div class="cosmic-card panel" id="cloudPanel">
- <div class="panel-title">Подключение NovaChat к интернету</div>
- <p class="muted">Подключи облачную базу, чтобы друзья видели общие публикации, истории, группы и сообщения на своих телефонах.</p>
- <input class="field" id="sbUrl" placeholder="Supabase Project URL">
- <input class="field" id="sbKey" placeholder="Supabase anon / publishable key">
- <button class="pillbtn" onclick="novaConnectCloud()">Подключить облако</button>
- <div class="muted" id="cloudStatus">Облако не подключено. Пока данные хранятся только на этом устройстве.</div>
- <div id="authBox" style="display:none">
-  <input class="field" id="cloudEmail" type="email" placeholder="Твой email">
-  <input class="field" id="cloudPassword" type="password" placeholder="Пароль (от 6 символов)">
-  <div class="action-row"><button class="pillbtn" onclick="novaAuth('signup')">Создать аккаунт</button><button class="file-label" onclick="novaAuth('login')">Войти</button><button class="file-label" onclick="novaLogout()">Выйти</button></div>
+<section id="profile" class="page">
+ <div class="profile-cover">
+  <div class="profile-cover-shade"></div>
+  <div class="profile-cover-top"><span>YOUR NOVA ID</span><button class="profile-icon-btn" onclick="toggleProfileEdit()">✎ Изменить</button></div>
+  <div class="profile-cover-title">LIVE YOUR<br><b>OWN UNIVERSE</b></div>
  </div>
-</div>
-<div class="cosmic-card panel"><div class="panel-title">Настройки пространства</div><div class="setting-row"><span>Приватность</span><b>Только друзья</b></div><div class="setting-row"><span>Тема оформления</span><b>Cosmos Neon</b></div><div class="setting-row"><span>Статус версии</span><b style="color:#8ce9c2">Prototype</b></div></div></section>
+ <div class="profile-main">
+  <div class="profile-identity">
+   <div class="profile-avatar-wrap"><div class="profile-avatar" id="profileAvatar">✦</div><label class="avatar-change" title="Изменить фото">＋<input id="avatarFile" type="file" accept="image/*" hidden></label></div>
+   <div class="profile-identity-text"><h2 id="profileTitle">Космический гость</h2><div class="profile-handle" id="profileHandle">@novachat_user</div></div>
+   <button class="profile-follow-btn" onclick="toggleProfileEdit()">Редактировать профиль</button>
+  </div>
+  <div class="profile-stats"><div><b id="profilePostCount">0</b><span>публикаций</span></div><div><b>0</b><span>подписчиков</span></div><div><b>0</b><span>подписок</span></div><div><b id="profileLikeCount">0</b><span>отметок</span></div></div>
+  <div class="profile-bio"><div id="profileBioText">Создаю моменты. Ловлю впечатления. Живу на своей орбите.</div><a id="profileLinkText" href="#" onclick="return false" style="display:none"></a></div>
+  <div class="profile-edit-box" id="profileEditBox" style="display:none">
+   <input class="field" id="nick" placeholder="Имя профиля">
+   <textarea class="field" id="profileBioInput" placeholder="Расскажи немного о себе"></textarea>
+   <input class="field" id="profileLinkInput" placeholder="Ссылка на сайт или соцсеть">
+   <button class="pillbtn" onclick="saveNick()">Сохранить изменения</button>
+  </div>
+  <div class="profile-highlights">
+   <div class="profile-highlight" onclick="show('feed')"><div class="highlight-circle">＋</div><span>Новая</span></div>
+   <div class="profile-highlight"><div class="highlight-circle">🌆</div><span>Моменты</span></div>
+   <div class="profile-highlight"><div class="highlight-circle">🎧</div><span>Музыка</span></div>
+   <div class="profile-highlight"><div class="highlight-circle">✦</div><span>Лучшее</span></div>
+  </div>
+  <div class="profile-tabs"><button class="profile-tab active" onclick="profileTab('posts',this)">▦ Публикации</button><button class="profile-tab" onclick="profileTab('stories',this)">◉ Истории</button><button class="profile-tab" onclick="profileTab('videos',this)">▷ Видео</button><button class="profile-tab" onclick="profileTab('music',this)">♫ Музыка</button></div>
+  <div class="profile-content-grid" id="profileContentGrid"><div class="profile-empty">Твои публикации появятся здесь</div></div>
+ </div>
+ <details class="cosmic-card panel profile-settings"><summary class="panel-title">Настройки аккаунта и подключение</summary>
+  <div id="cloudPanel">
+   <p class="muted">Подключи облачную базу, чтобы друзья видели общие публикации, истории, группы и сообщения на своих телефонах.</p>
+   <input class="field" id="sbUrl" placeholder="Supabase Project URL">
+   <input class="field" id="sbKey" placeholder="Supabase anon / publishable key">
+   <button class="pillbtn" onclick="novaConnectCloud()">Подключить облако</button>
+   <div class="muted" id="cloudStatus">Облако не подключено. Пока данные хранятся только на этом устройстве.</div>
+   <div id="authBox" style="display:none">
+    <input class="field" id="cloudEmail" type="email" placeholder="Твой email">
+    <input class="field" id="cloudPassword" type="password" placeholder="Пароль (от 6 символов)">
+    <div class="action-row"><button class="pillbtn" onclick="novaAuth('signup')">Создать аккаунт</button><button class="file-label" onclick="novaAuth('login')">Войти</button><button class="file-label" onclick="novaLogout()">Выйти</button></div>
+   </div>
+  </div>
+  <div class="setting-row"><span>Приватность</span><b>Только друзья</b></div><div class="setting-row"><span>Тема оформления</span><b>Cosmos Neon</b></div><div class="setting-row"><span>Статус версии</span><b style="color:#8ce9c2">Prototype</b></div>
+ </details>
+</section>
 <section id="reels" class="page">
  <div class="welcome"><div class="eyebrow">NOVA SHORTS</div><h1>Короткие <em>видео.</em></h1><p class="sub">Вертикальные ролики, идеи и моменты сообщества.</p></div>
  <div class="cosmic-card panel reels-upload"><div class="panel-title">Добавить свой ролик</div><p class="muted">Выбери видео на телефоне. Сейчас оно будет доступно в этой сессии на твоём устройстве.</p><label class="file-label">＋ Выбрать видео <input id="reelFile" type="file" accept="video/*" hidden></label><div id="reelStatus" class="muted" style="margin-top:10px">Видео ещё не выбрано</div></div>
@@ -83,7 +138,11 @@ let chats=['Личный чат','Компания друзей','Nova Team'];le
 function drawMessages(){$('msgs').innerHTML='';let arr=messages[active]||[];if(!arr.length){$('msgs').innerHTML='<div class="muted">Пока тихо. Напиши первое сообщение.</div>';return}arr.forEach(m=>{let b=document.createElement('div');b.className='bubble mine';b.textContent=m;$('msgs').append(b)});$('msgs').scrollTop=$('msgs').scrollHeight}
 function send(){let t=$('msg').value.trim();if(!active){toast('Сначала выбери чат');return}if(!t)return;(messages[active]??=[]).push(t);localStorage.setItem('nova_messages',JSON.stringify(messages));$('msg').value='';drawMessages()}
 $('msg').addEventListener('keydown',e=>{if(e.key==='Enter')send()});$('audiofile').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;$('player').src=URL.createObjectURL(f);$('track').textContent=f.name;$('player').play().catch(()=>toast('Нажми Play для запуска'))});
-$('nick').value=localStorage.getItem('nova_nick')||'';async function saveNick(){let n=$('nick').value.trim();if(!n){toast('Введи имя');return}localStorage.setItem('nova_nick',n);$('profileTitle').textContent=n;if(window.novaSaveProfile){await window.novaSaveProfile(n);return}toast('Профиль сохранён на этом устройстве')}$('profileTitle').textContent=localStorage.getItem('nova_nick')||'Космический гость';
+$('nick').value=localStorage.getItem('nova_nick')||'';$('profileTitle').textContent=localStorage.getItem('nova_nick')||'Космический гость';
+function toggleProfileEdit(){const box=$('profileEditBox');box.style.display=box.style.display==='none'?'block':'none';$('nick').value=localStorage.getItem('nova_nick')||'';$('profileBioInput').value=localStorage.getItem('nova_bio')||'';$('profileLinkInput').value=localStorage.getItem('nova_link')||''}
+async function saveNick(){let n=$('nick').value.trim();if(!n){toast('Введи имя');return}localStorage.setItem('nova_nick',n);localStorage.setItem('nova_bio',$('profileBioInput').value.trim());localStorage.setItem('nova_link',$('profileLinkInput').value.trim());$('profileTitle').textContent=n;$('profileBioText').textContent=localStorage.getItem('nova_bio')||'Расскажи немного о себе';let link=localStorage.getItem('nova_link');$('profileLinkText').style.display=link?'block':'none';$('profileLinkText').textContent=link;$('profileLinkText').href=/^https?:\/\//i.test(link)?link:'https://'+link;$('profileHandle').textContent='@'+n.toLowerCase().replace(/[^a-z0-9а-яё_]/gi,'_');$('profileEditBox').style.display='none';if(window.novaSaveProfile)await window.novaSaveProfile(n);else toast('Профиль сохранён на этом устройстве')}
+function profileTab(kind,button){document.querySelectorAll('.profile-tab').forEach(x=>x.classList.remove('active'));button.classList.add('active');const grid=$('profileContentGrid');grid.innerHTML='';if(kind==='posts'){const list=JSON.parse(localStorage.getItem('nova_posts')||'[]');$('profilePostCount').textContent=list.length;if(!list.length){grid.innerHTML='<div class="profile-empty">Твои публикации появятся здесь</div>';return}list.forEach(p=>{const item=document.createElement('div');item.className='profile-grid-item';item.textContent=p.photo?'▧':'✦';grid.append(item)})}else if(kind==='videos'){grid.innerHTML='<div class="profile-empty">Твои короткие видео будут отображаться здесь</div>'}else if(kind==='stories'){grid.innerHTML='<div class="profile-empty">Здесь будут сохранённые истории</div>'}else{grid.innerHTML='<div class="profile-empty">Твои музыкальные подборки появятся здесь</div>'}}
+$('profileBioText').textContent=localStorage.getItem('nova_bio')||'Создаю моменты. Ловлю впечатления. Живу на своей орбите.';let savedLink=localStorage.getItem('nova_link')||'';if(savedLink){$('profileLinkText').style.display='block';$('profileLinkText').textContent=savedLink;$('profileLinkText').href=/^https?:\/\//i.test(savedLink)?savedLink:'https://'+savedLink}let savedAvatar=localStorage.getItem('nova_avatar');if(savedAvatar)$('profileAvatar').style.backgroundImage='url('+savedAvatar+')';$('avatarFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{localStorage.setItem('nova_avatar',reader.result);$('profileAvatar').style.backgroundImage='url('+reader.result+')';$('profileAvatar').textContent=''};reader.readAsDataURL(f)});profileTab('posts',document.querySelector('.profile-tab'));
 drawChats();drawPosts();drawHomePosts();
 </script>
 <style>
