@@ -53,3 +53,16 @@ create policy "Authenticated upload NovaChat media" on storage.objects for inser
 alter publication supabase_realtime add table public.posts;
 alter publication supabase_realtime add table public.stories;
 alter publication supabase_realtime add table public.messages;
+
+-- Community posts and shared community feed
+create table if not exists public.community_posts (
+ id uuid primary key default gen_random_uuid(),
+ community_id uuid not null references public.communities(id) on delete cascade,
+ user_id uuid not null references auth.users(id) on delete cascade,
+ author_name text, text text default '', media_url text,
+ created_at timestamptz not null default now()
+);
+alter table public.community_posts enable row level security;
+create policy "Authenticated users read community posts" on public.community_posts for select to authenticated using (true);
+create policy "Users create own community posts" on public.community_posts for insert to authenticated with check (auth.uid()=user_id);
+alter publication supabase_realtime add table public.community_posts;
