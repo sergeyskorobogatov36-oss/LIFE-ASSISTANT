@@ -45,4 +45,58 @@ function send(){let t=$('msg').value.trim();if(!active){toast('Сначала в
 $('msg').addEventListener('keydown',e=>{if(e.key==='Enter')send()});$('audiofile').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;$('player').src=URL.createObjectURL(f);$('track').textContent=f.name;$('player').play().catch(()=>toast('Нажми Play для запуска'))});
 $('nick').value=localStorage.getItem('nova_nick')||'';function saveNick(){let n=$('nick').value.trim();if(!n){toast('Введи имя');return}localStorage.setItem('nova_nick',n);$('profileTitle').textContent=n;toast('Профиль обновлён')}$('profileTitle').textContent=localStorage.getItem('nova_nick')||'Космический гость';
 drawChats();drawPosts();drawHomePosts();
-</script></body></html>
+</script>
+<style>
+.post-media{aspect-ratio:auto;max-height:520px;overflow:hidden;background:#101116}
+.post-media img,.post-media video{display:block;width:100%;max-height:520px;object-fit:contain;background:#050506}
+.story-thumb{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.story-viewer{position:fixed;inset:0;z-index:80;background:#050507;display:none;align-items:center;justify-content:center;flex-direction:column;padding:24px}
+.story-viewer img,.story-viewer video{max-width:100%;max-height:78vh;border-radius:14px}
+.story-viewer button{position:absolute;top:25px;right:20px;background:#222;border:0;border-radius:50%;width:42px;height:42px;font-size:22px}
+.item-card{padding:14px;margin:10px 12px;border:1px solid #2b2d35;border-radius:13px;background:#111318}
+.item-card h3{font-size:14px;margin:0 0 5px}.item-card p{font-size:12px;color:#aaa;white-space:pre-wrap}
+.community-head{display:flex;align-items:center;gap:12px}.community-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#7553ad,#e35b9b);display:grid;place-items:center;font-size:22px}
+.track-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #292b31;font-size:12px}.track-row button{margin-left:auto;background:#242630;border:0;border-radius:8px;padding:8px}
+</style>
+<div class="story-viewer" id="storyViewer" onclick="if(event.target===this)closeStory()"><button onclick="closeStory()">×</button><div id="storyContent"></div><div id="storyCaption" style="margin-top:12px"></div></div>
+<input id="storyUpload" type="file" accept="image/*,video/*" hidden>
+<section id="communities" class="page">
+ <div class="welcome"><div class="eyebrow">YOUR PEOPLE</div><h1>Группы и <em>сообщества.</em></h1><p class="sub">Создавай места для общения и общих интересов.</p></div>
+ <div class="cosmic-card panel">
+  <div class="panel-title">Создать группу</div><input class="field" id="groupName" placeholder="Название группы"><button class="pillbtn" onclick="createGroup()">＋ Создать группу</button>
+ </div>
+ <div class="cosmic-card panel">
+  <div class="panel-title">Создать сообщество</div><input class="field" id="communityName" placeholder="Название сообщества"><textarea class="field" id="communityDesc" placeholder="О чём ваше сообщество?"></textarea><button class="pillbtn" onclick="createCommunity()">＋ Создать сообщество</button>
+ </div>
+ <div class="section-head"><h2>Твои группы</h2></div><div id="groupsList"></div>
+ <div class="section-head"><h2>Сообщества</h2></div><div id="communitiesList"></div>
+</section>
+<script>
+(function(){
+ const readFile=f=>new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(f)});
+ const safeSave=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){toast('Файл слишком большой для локального хранилища. Попробуй фото поменьше.');return false}};
+ let stories=JSON.parse(localStorage.getItem('nova_stories')||'[]');
+ let groups=JSON.parse(localStorage.getItem('nova_groups')||'[]');
+ let communities=JSON.parse(localStorage.getItem('nova_communities')||'[]');
+ let tracks=[];
+ window.chooseStory=()=>$('storyUpload').click();
+ $('storyUpload').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=await readFile(f);stories.unshift({data,type:f.type,caption:f.name});if(safeSave('nova_stories',stories)){renderStories();openStory(stories[0])}}catch(err){toast('Не удалось загрузить историю')}e.target.value=''});
+ window.openStory=s=>{$('storyContent').innerHTML='';if(s.type.startsWith('video/')){const v=document.createElement('video');v.src=s.data;v.controls=true;v.autoplay=true;$('storyContent').append(v)}else{const img=document.createElement('img');img.src=s.data;$('storyContent').append(img)}$('storyCaption').textContent=s.caption||'';$('storyViewer').style.display='flex'};
+ window.closeStory=()=>{$('storyViewer').style.display='none';$('storyContent').innerHTML=''};
+ window.renderStories=()=>{const strip=document.querySelector('.stories');if(!strip)return;strip.innerHTML='';const add=document.createElement('div');add.className='story add';add.innerHTML='<div class="story-ring"><div class="story-face">＋</div></div>Ваша история';add.onclick=chooseStory;strip.append(add);stories.forEach(s=>{const item=document.createElement('div');item.className='story';const ring=document.createElement('div');ring.className='story-ring';const face=document.createElement('div');face.className='story-face';if(s.type.startsWith('image/')){const img=document.createElement('img');img.src=s.data;img.className='story-thumb';face.append(img)}else face.textContent='▶';ring.append(face);item.append(ring,document.createTextNode('История'));item.onclick=()=>openStory(s);strip.append(item)})};
+ window.publish=async()=>{const t=$('postText').value.trim(),f=$('photo').files[0];if(!t&&!f){toast('Добавь текст или выбери фото');return}let data='';try{if(f)data=await readFile(f);posts.unshift({text:t,photo:f?f.name:'',image:data,likes:0});if(!safeSave('nova_posts',posts))return;$('postText').value='';$('photo').value='';$('photoName').textContent='';drawPosts();drawHomePosts();toast('Публикация добавлена')}catch(e){toast('Не удалось добавить фото')}};
+ function buildPost(p,i){const card=document.createElement('div');card.className='cosmic-card post-card';const head=document.createElement('div');head.className='post-head';head.innerHTML='<div class="avatar">✦</div><div><b>Твой профиль</b><div class="muted">Только что · NovaChat</div></div>';card.append(head);if(p.image){const media=document.createElement('div');media.className='post-media';const img=document.createElement('img');img.src=p.image;img.alt='Фото публикации';media.append(img);card.append(media)}if(p.text){const body=document.createElement('div');body.className='post-text';body.textContent=p.text;card.append(body)}const actions=document.createElement('div');actions.className='post-actions';const like=document.createElement('button');like.className='ghost';like.textContent='♡ '+(p.likes||0);like.onclick=()=>{posts[i].likes=(posts[i].likes||0)+1;safeSave('nova_posts',posts);drawPosts();drawHomePosts()};actions.append(like);card.append(actions);return card}
+ window.drawPosts=()=>{const box=$('posts');box.innerHTML='';if(!posts.length){box.innerHTML='<div class="cosmic-card panel muted">Здесь появятся твои публикации. Создай первый момент.</div>';return}posts.forEach((p,i)=>box.append(buildPost(p,i)))};
+ window.drawHomePosts=()=>{const box=$('homePosts');box.innerHTML='';if(!posts.length){box.innerHTML='<div class="panel muted">Пока нет публикаций. Нажми «Создать пост», чтобы добавить первую.</div>';return}posts.slice(0,5).forEach((p,i)=>box.append(buildPost(p,i)))};
+ window.createGroup=()=>{const n=$('groupName').value.trim();if(!n){toast('Введи название группы');return}groups.unshift(n);if(!safeSave('nova_groups',groups))return;chats.unshift(n);safeSave('nova_groups',groups);$('groupName').value='';renderGroups();drawChats();toast('Группа создана на этом устройстве')};
+ window.createCommunity=()=>{const n=$('communityName').value.trim(),d=$('communityDesc').value.trim();if(!n){toast('Введи название сообщества');return}communities.unshift({name:n,desc:d});if(!safeSave('nova_communities',communities))return;$('communityName').value='';$('communityDesc').value='';renderCommunities();toast('Сообщество создано')};
+ function renderGroups(){const box=$('groupsList');box.innerHTML='';if(!groups.length){box.innerHTML='<p class="muted" style="padding:0 15px">Пока нет групп. Создай первую выше.</p>';return}groups.forEach(n=>{const el=document.createElement('div');el.className='item-card';el.innerHTML='<div class="community-head"><div class="community-icon">✦</div><div><h3></h3><p>Групповой чат</p></div></div>';el.querySelector('h3').textContent=n;box.append(el)})}
+ function renderCommunities(){const box=$('communitiesList');box.innerHTML='';if(!communities.length){box.innerHTML='<p class="muted" style="padding:0 15px">Пока нет сообществ. Создай своё.</p>';return}communities.forEach(c=>{const el=document.createElement('div');el.className='item-card';el.innerHTML='<div class="community-head"><div class="community-icon">◎</div><div><h3></h3><p></p></div></div>';el.querySelector('h3').textContent=c.name;el.querySelector('p').textContent=c.desc||'Сообщество NovaChat';box.append(el)})}
+ const oldShow=window.show;window.show=id=>{oldShow(id);if(id==='communities'){renderGroups();renderCommunities()}};
+ const audio=$('audiofile');audio.multiple=true;audio.addEventListener('change',e=>{Array.from(e.target.files||[]).forEach(f=>tracks.push({name:f.name,url:URL.createObjectURL(f)}));renderTracks();if(tracks.length){$('player').src=tracks[tracks.length-1].url;$('track').textContent=tracks[tracks.length-1].name;$('player').play().catch(()=>{})}});
+ function renderTracks(){let box=$('trackList');if(!box){box=document.createElement('div');box.id='trackList';box.className='cosmic-card panel';$('music').append(box)}box.innerHTML='<div class="panel-title">Моя музыка · '+tracks.length+'</div>';tracks.forEach((t,i)=>{const row=document.createElement('div');row.className='track-row';const name=document.createElement('span');name.textContent=t.name;const play=document.createElement('button');play.textContent='▶ Слушать';play.onclick=()=>{$('player').src=t.url;$('track').textContent=t.name;$('player').play()};row.append(name,play);box.append(row)})}
+ const homeTiles=document.querySelector('.tiles');if(homeTiles){const tile=document.createElement('button');tile.className='cosmic-card tile';tile.innerHTML='<div class="tile-icon">♧</div><b>Группы и сообщества</b><span>Создавай свои пространства</span>';tile.onclick=()=>show('communities');homeTiles.append(tile)}
+ renderStories();renderGroups();renderCommunities();renderTracks();
+})();
+</script>
+</body></html>
