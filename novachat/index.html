@@ -65,6 +65,11 @@ html,body{background:radial-gradient(ellipse at 50% -18%,#30205b 0%,#111126 35%,
  </div>
 </div>
 <div class="cosmic-card panel"><div class="panel-title">Настройки пространства</div><div class="setting-row"><span>Приватность</span><b>Только друзья</b></div><div class="setting-row"><span>Тема оформления</span><b>Cosmos Neon</b></div><div class="setting-row"><span>Статус версии</span><b style="color:#8ce9c2">Prototype</b></div></div></section>
+<section id="reels" class="page">
+ <div class="welcome"><div class="eyebrow">NOVA SHORTS</div><h1>Короткие <em>видео.</em></h1><p class="sub">Вертикальные ролики, идеи и моменты сообщества.</p></div>
+ <div class="cosmic-card panel reels-upload"><div class="panel-title">Добавить свой ролик</div><p class="muted">Выбери видео на телефоне. Сейчас оно будет доступно в этой сессии на твоём устройстве.</p><label class="file-label">＋ Выбрать видео <input id="reelFile" type="file" accept="video/*" hidden></label><div id="reelStatus" class="muted" style="margin-top:10px">Видео ещё не выбрано</div></div>
+ <div id="reelFeed" class="reel-feed"><div class="panel muted">Здесь появятся короткие видео. Добавь первый ролик.</div></div>
+</section>
 </main>
 <nav class="bottom"><button class="tab active" data-id="home" onclick="show('home')"><i>⌂</i>Лента</button><button class="tab" data-id="reels" onclick="show('reels')"><i>▷</i>Видео</button><button class="tab create-tab" data-id="feed" onclick="show('feed')"><i>＋</i>Создать</button><button class="tab" data-id="chats" onclick="show('chats')"><i>✉</i>Чаты</button><button class="tab" data-id="profile" onclick="show('profile')"><i>◈</i>Профиль</button></nav>
 <script>
