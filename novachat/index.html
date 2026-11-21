@@ -29,7 +29,21 @@ main{max-width:620px;margin:auto;padding:0 0 20px}.page{display:none;animation:a
 <section id="feed" class="page"><div class="welcome"><div class="eyebrow">NOVA COMMUNITY</div><h1>Новая публикация</h1><p class="sub">Поделись фото или мыслью с друзьями.</p></div><div class="cosmic-card feed-compose"><textarea class="field" id="postText" placeholder="О чём думаешь сегодня?"></textarea><div class="action-row"><label class="file-label">＋ Фото <input id="photo" type="file" accept="image/*" hidden></label><button class="pillbtn" onclick="publish()">Опубликовать</button></div><div id="photoName" class="muted"></div></div><div id="posts"></div></section>
 <section id="chats" class="page"><div class="welcome"><div class="eyebrow">PRIVATE MESSAGES</div><h1>Твои <em>диалоги.</em></h1><p class="sub">Место для разговоров без лишнего шума.</p></div><div class="cosmic-card panel"><div class="panel-title">Недавние чаты</div><div id="chatlist"></div></div><div class="cosmic-card chat-view"><div class="panel-title" id="chatname">Выбери диалог</div><div class="messages" id="msgs"><div class="muted">Открой чат, чтобы начать переписку.</div></div><div class="sendrow"><input class="field" id="msg" placeholder="Написать сообщение…"><button class="pillbtn" onclick="send()" style="margin:0">➤</button></div></div></section>
 <section id="music" class="page"><div class="welcome"><div class="eyebrow">SOUND OF YOUR UNIVERSE</div><h1>Поймай <em>ритм.</em></h1><p class="sub">Добавь музыку с устройства и включи свой саундтрек.</p></div><div class="cosmic-card music-visual"><div class="album">♫</div><div class="eyebrow">NOW PLAYING</div><h2 id="track">Твой следующий трек</h2><p class="muted">Личная музыкальная коллекция</p><input class="field" type="file" id="audiofile" accept="audio/*"><audio id="player" controls></audio></div><div class="cosmic-card panel"><div class="panel-title">Вместе звучит лучше</div><p class="muted">Совместные комнаты прослушивания и музыкальные подборки друзей добавим при подключении серверной части.</p></div></section>
-<section id="profile" class="page"><div class="welcome"><div class="eyebrow">YOUR NOVA ID</div><h1>Твой <em>профиль.</em></h1></div><div class="cosmic-card profile-hero"><div class="profile-orb">✦</div><h2 id="profileTitle">Космический гость</h2><p class="muted">Участник NovaChat</p><input class="field" id="nick" placeholder="Как тебя называть?"><button class="pillbtn" onclick="saveNick()">Сохранить профиль</button></div><div class="cosmic-card panel"><div class="panel-title">Настройки пространства</div><div class="setting-row"><span>Приватность</span><b>Только друзья</b></div><div class="setting-row"><span>Тема оформления</span><b>Cosmos Neon</b></div><div class="setting-row"><span>Статус версии</span><b style="color:#8ce9c2">Prototype</b></div></div></section>
+<section id="profile" class="page"><div class="welcome"><div class="eyebrow">YOUR NOVA ID</div><h1>Твой <em>профиль.</em></h1></div><div class="cosmic-card profile-hero"><div class="profile-orb">✦</div><h2 id="profileTitle">Космический гость</h2><p class="muted">Участник NovaChat</p><input class="field" id="nick" placeholder="Как тебя называть?"><button class="pillbtn" onclick="saveNick()">Сохранить профиль</button></div>
+<div class="cosmic-card panel" id="cloudPanel">
+ <div class="panel-title">Подключение NovaChat к интернету</div>
+ <p class="muted">Подключи облачную базу, чтобы друзья видели общие публикации, истории, группы и сообщения на своих телефонах.</p>
+ <input class="field" id="sbUrl" placeholder="Supabase Project URL">
+ <input class="field" id="sbKey" placeholder="Supabase anon / publishable key">
+ <button class="pillbtn" onclick="novaConnectCloud()">Подключить облако</button>
+ <div class="muted" id="cloudStatus">Облако не подключено. Пока данные хранятся только на этом устройстве.</div>
+ <div id="authBox" style="display:none">
+  <input class="field" id="cloudEmail" type="email" placeholder="Твой email">
+  <input class="field" id="cloudPassword" type="password" placeholder="Пароль (от 6 символов)">
+  <div class="action-row"><button class="pillbtn" onclick="novaAuth('signup')">Создать аккаунт</button><button class="file-label" onclick="novaAuth('login')">Войти</button><button class="file-label" onclick="novaLogout()">Выйти</button></div>
+ </div>
+</div>
+<div class="cosmic-card panel"><div class="panel-title">Настройки пространства</div><div class="setting-row"><span>Приватность</span><b>Только друзья</b></div><div class="setting-row"><span>Тема оформления</span><b>Cosmos Neon</b></div><div class="setting-row"><span>Статус версии</span><b style="color:#8ce9c2">Prototype</b></div></div></section>
 </main>
 <nav class="bottom"><button class="tab active" data-id="home" onclick="show('home')"><i>⌂</i>Лента</button><button class="tab" data-id="feed" onclick="show('feed')"><i>＋</i>Создать</button><button class="tab" data-id="chats" onclick="show('chats')"><i>✉</i>Чаты</button><button class="tab" data-id="music" onclick="show('music')"><i>♫</i>Музыка</button><button class="tab" data-id="profile" onclick="show('profile')"><i>◈</i>Профиль</button></nav>
 <script>
@@ -97,6 +111,96 @@ drawChats();drawPosts();drawHomePosts();
  function renderTracks(){let box=$('trackList');if(!box){box=document.createElement('div');box.id='trackList';box.className='cosmic-card panel';$('music').append(box)}box.innerHTML='<div class="panel-title">Моя музыка · '+tracks.length+'</div>';tracks.forEach((t,i)=>{const row=document.createElement('div');row.className='track-row';const name=document.createElement('span');name.textContent=t.name;const play=document.createElement('button');play.textContent='▶ Слушать';play.onclick=()=>{$('player').src=t.url;$('track').textContent=t.name;$('player').play()};row.append(name,play);box.append(row)})}
  const homeTiles=document.querySelector('.tiles');if(homeTiles){const tile=document.createElement('button');tile.className='cosmic-card tile';tile.innerHTML='<div class="tile-icon">♧</div><b>Группы и сообщества</b><span>Создавай свои пространства</span>';tile.onclick=()=>show('communities');homeTiles.append(tile)}
  renderStories();renderGroups();renderCommunities();renderTracks();
+})();
+</script>
+
+<script>
+(function(){
+ const CFG='nova_supabase_cfg';let sb=null,user=null,remotePosts=[],remoteStories=[],channel=null;
+ const $=id=>document.getElementById(id);
+ const say=t=>{const e=$('cloudStatus');if(e)e.textContent=t;toast(t)};
+ const cfg=()=>{try{return JSON.parse(localStorage.getItem(CFG)||'null')}catch(e){return null}};
+ async function boot(){
+  const c=cfg();if(!c)return;
+  $('sbUrl').value=c.url;$('sbKey').value=c.key;
+  try{
+   const mod=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+   sb=mod.createClient(c.url,c.key);
+   const {data}=await sb.auth.getSession();user=data.session?.user||null;
+   $('authBox').style.display='block';
+   if(user){say('Облако подключено: '+user.email);await syncAll();subscribe()}else say('Облако подключено. Войди или создай аккаунт.');
+  }catch(e){say('Не удалось подключиться. Проверь URL и ключ проекта.')}
+ }
+ window.novaConnectCloud=async()=>{
+  const url=$('sbUrl').value.trim(),key=$('sbKey').value.trim();
+  if(!url.startsWith('https://')||!key){say('Введи Project URL и anon key из Supabase');return}
+  localStorage.setItem(CFG,JSON.stringify({url,key}));await boot();
+ };
+ window.novaAuth=async(mode)=>{
+  if(!sb){say('Сначала подключи облако');return}
+  const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
+  if(!email||password.length<6){say('Укажи email и пароль не короче 6 символов');return}
+  const res=mode==='signup'?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});
+  if(res.error){say(res.error.message);return}
+  user=res.data.user||res.data.session?.user;
+  if(!user){say('Проверь почту для подтверждения регистрации');return}
+  say('Вход выполнен: '+email);await syncAll();subscribe();
+ };
+ window.novaLogout=async()=>{if(sb)await sb.auth.signOut();user=null;remotePosts=[];remoteStories=[];say('Ты вышел из аккаунта.');drawRemote()};
+ async function upload(file,folder){
+  const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'');
+  const path=folder+'/'+user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;
+  const {error}=await sb.storage.from('nova-media').upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});
+  if(error)throw error;
+  const {data}=sb.storage.from('nova-media').getPublicUrl(path);return data.publicUrl;
+ }
+ function drawRemote(){
+  if(!user)return;
+  const all=remotePosts.map(p=>({text:p.text||'',image:p.media_url||'',likes:p.likes||0,author:p.author_name||'Участник NovaChat'}));
+  const box=$('posts');if(box){box.innerHTML='';if(!all.length)box.innerHTML='<div class="panel muted">Пока нет публикаций. Пригласи друзей и начните общаться.</div>';all.forEach((p,i)=>{const c=document.createElement('div');c.className='post-card';const h=document.createElement('div');h.className='post-head';h.innerHTML='<div class="avatar">✦</div><b></b>';h.querySelector('b').textContent=p.author;c.append(h);if(p.image){const m=document.createElement('div');m.className='post-media';const im=document.createElement('img');im.src=p.image;m.append(im);c.append(m)}const t=document.createElement('div');t.className='post-text';t.textContent=p.text;c.append(t);box.append(c)})}
+  const home=$('homePosts');if(home){home.innerHTML='';remotePosts.slice(0,5).forEach(p=>{const c=document.createElement('div');c.className='post-card';const h=document.createElement('div');h.className='post-head';h.innerHTML='<div class="avatar">✦</div><b></b>';h.querySelector('b').textContent=p.author_name||'Участник';c.append(h);if(p.media_url){const m=document.createElement('div');m.className='post-media';const im=document.createElement('img');im.src=p.media_url;m.append(im);c.append(m)}const t=document.createElement('div');t.className='post-text';t.textContent=p.text||'';c.append(t);home.append(c)})}
+  if(typeof renderStories==='function')renderStories();
+ }
+ async function syncAll(){
+  const [p,s]=await Promise.all([sb.from('posts').select('*').order('created_at',{ascending:false}).limit(100),sb.from('stories').select('*').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false})]);
+  if(p.error||s.error){say('Ошибка базы. Проверь, что установил SQL-схему NovaChat.');return}
+  remotePosts=p.data||[];remoteStories=s.data||[];drawRemote();
+ }
+ function subscribe(){
+  if(channel)sb.removeChannel(channel);
+  channel=sb.channel('nova-live').on('postgres_changes',{event:'*',schema:'public',table:'posts'},syncAll).on('postgres_changes',{event:'*',schema:'public',table:'stories'},syncAll).on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>{if(active)loadCloudMessages(active)}).subscribe();
+ }
+ window.publish=async()=>{
+  if(!sb||!user){say('Для общей публикации подключи облако и войди в аккаунт');return}
+  const text=$('postText').value.trim(),file=$('photo').files[0];if(!text&&!file){toast('Добавь текст или фото');return}
+  try{let url=null;if(file)url=await upload(file,'posts');const {error}=await sb.from('posts').insert({user_id:user.id,text,media_url:url,author_name:localStorage.getItem('nova_nick')||user.email.split('@')[0]});if(error)throw error;$('postText').value='';$('photo').value='';$('photoName').textContent='';await syncAll();say('Публикация доступна всем участникам NovaChat')}catch(e){say('Не удалось опубликовать: '+e.message)}
+ };
+ const storyInput=$('storyUpload');
+ if(storyInput)storyInput.addEventListener('change',async e=>{const file=e.target.files[0];if(!file||!sb||!user)return;try{const url=await upload(file,'stories');const {error}=await sb.from('stories').insert({user_id:user.id,media_url:url,media_type:file.type,caption:file.name,expires_at:new Date(Date.now()+86400000).toISOString()});if(error)throw error;await syncAll();say('История опубликована для друзей')}catch(err){say('История не загрузилась: '+err.message)}});
+ const oldChoose=window.chooseStory;window.chooseStory=()=>{if(!user){say('Войди в аккаунт, чтобы делиться историями');return}oldChoose()};
+ window.renderStories=function(){
+  const strip=document.querySelector('.stories');if(!strip)return;strip.innerHTML='';
+  const add=document.createElement('div');add.className='story add';add.innerHTML='<div class="story-ring"><div class="story-face">＋</div></div>Ваша история';add.onclick=window.chooseStory;strip.append(add);
+  remoteStories.forEach(s=>{const item=document.createElement('div');item.className='story';const ring=document.createElement('div');ring.className='story-ring';const face=document.createElement('div');face.className='story-face';if((s.media_type||'').startsWith('image/')){const im=document.createElement('img');im.src=s.media_url;im.className='story-thumb';face.append(im)}else face.textContent='▶';ring.append(face);item.append(ring,document.createTextNode(s.author_name||'История'));item.onclick=()=>{const isVideo=(s.media_type||'').startsWith('video/');$('storyContent').innerHTML='';const media=document.createElement(isVideo?'video':'img');media.src=s.media_url;if(isVideo){media.controls=true;media.autoplay=true}media.style.maxWidth='100%';media.style.maxHeight='78vh';$('storyContent').append(media);$('storyCaption').textContent=s.caption||'';$('storyViewer').style.display='flex'};strip.append(item)});
+ };
+ window.createGroup=async()=>{if(!sb||!user){say('Войди в аккаунт, чтобы создать общую группу');return}const name=$('groupName').value.trim();if(!name)return toast('Введи название группы');const {data,error}=await sb.from('groups').insert({name,owner_id:user.id}).select().single();if(error)return say(error.message);await sb.from('group_members').insert({group_id:data.id,user_id:user.id});$('groupName').value='';await loadGroups();say('Группа создана в общем пространстве')};
+ window.createCommunity=async()=>{if(!sb||!user){say('Войди в аккаунт, чтобы создать сообщество');return}const name=$('communityName').value.trim(),description=$('communityDesc').value.trim();if(!name)return toast('Введи название сообщества');const {error}=await sb.from('communities').insert({name,description,owner_id:user.id});if(error)return say(error.message);$('communityName').value='';$('communityDesc').value='';await loadGroups();say('Сообщество создано для всех участников')};
+ async function loadGroups(){if(!sb||!user)return;const [g,c]=await Promise.all([sb.from('groups').select('*').order('created_at',{ascending:false}),sb.from('communities').select('*').order('created_at',{ascending:false})]);if(!g.error){$('groupsList').innerHTML='';(g.data||[]).forEach(x=>{const el=document.createElement('div');el.className='item-card';const b=document.createElement('b');b.textContent=x.name;el.append(b);$('groupsList').append(el)})}if(!c.error){$('communitiesList').innerHTML='';(c.data||[]).forEach(x=>{const el=document.createElement('div');el.className='item-card';const b=document.createElement('b');b.textContent=x.name;const p=document.createElement('p');p.textContent=x.description||'';el.append(b,p);$('communitiesList').append(el)})}}
+ async function loadCloudMessages(group){const {data}=await sb.from('messages').select('*').eq('group_id',group).order('created_at');if(!data)return;$('msgs').innerHTML='';data.forEach(m=>{const b=document.createElement('div');b.className='bubble'+(m.user_id===user.id?' mine':'');b.textContent=m.body;$('msgs').append(b)})}
+ window.send=async()=>{const body=$('msg').value.trim();if(!body)return;if(!sb||!user){say('Для общих сообщений нужен вход в облако');return}if(!active){toast('Сначала выбери групповой чат');return}const {error}=await sb.from('messages').insert({group_id:active,user_id:user.id,body});if(error){say('Не удалось отправить: '+error.message);return}$('msg').value='';await loadCloudMessages(active)};
+ const baseShow=window.show;window.show=function(id){baseShow(id);if(id==='communities')loadGroups()};
+ window.searchInternetMusic=async()=>{
+  const q=$('internetMusicQuery').value.trim();if(!q)return;const box=$('internetMusicResults');box.textContent='Ищем открытые аудиозаписи…';
+  try{const url='https://archive.org/advancedsearch.php?q='+encodeURIComponent('mediatype:audio AND ('+q+')')+'&fl[]=identifier&fl[]=title&fl[]=creator&rows=12&page=1&output=json';
+   const data=await fetch(url).then(r=>r.json());box.innerHTML='';
+   for(const item of data.response.docs){const meta=await fetch('https://archive.org/metadata/'+encodeURIComponent(item.identifier)).then(r=>r.json());const file=(meta.files||[]).find(x=>!x.source&&x.name&&(/\.(mp3|ogg|m4a)$/i).test(x.name)&&Number(x.size||0)>0);if(!file)continue;
+    const row=document.createElement('div');row.className='track-row';const label=document.createElement('span');label.textContent=(item.title||item.identifier)+' · '+(item.creator||'Internet Archive');const play=document.createElement('button');play.textContent='▶ Слушать';play.onclick=()=>{$('player').src='https://archive.org/download/'+encodeURIComponent(item.identifier)+'/'+file.name.split('/').map(encodeURIComponent).join('/');$('track').textContent=item.title||file.name;$('player').play().catch(()=>toast('Нажми Play'))};row.append(label,play);box.append(row);
+   }if(!box.children.length)box.textContent='Не нашли доступных аудиофайлов. Попробуй другой запрос.';
+  }catch(e){box.textContent='Поиск временно недоступен. Попробуй позже.'}
+ };
+ const music=$('music');if(music&&!$('internetMusicQuery')){const block=document.createElement('div');block.className='cosmic-card panel';block.innerHTML='<div class="panel-title">Музыка из интернета</div><p class="muted">Поиск открытых аудиозаписей из Internet Archive. Доступность воспроизведения зависит от прав и формата конкретной записи.</p><input class="field" id="internetMusicQuery" placeholder="Например: jazz, piano, ambient"><button class="pillbtn" onclick="searchInternetMusic()">Найти музыку</button><div id="internetMusicResults"></div>';music.append(block)}
+ async function start(){await boot();if(user)await loadGroups()}
+ start();
 })();
 </script>
 </body></html>
