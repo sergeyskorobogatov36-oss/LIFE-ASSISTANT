@@ -66,3 +66,21 @@ alter table public.community_posts enable row level security;
 create policy "Authenticated users read community posts" on public.community_posts for select to authenticated using (true);
 create policy "Users create own community posts" on public.community_posts for insert to authenticated with check (auth.uid()=user_id);
 alter publication supabase_realtime add table public.community_posts;
+
+ 
+-- User profiles: one cloud-synced NovaChat identity per account
+create table if not exists public.profiles (
+ id uuid primary key references auth.users(id) on delete cascade,
+ display_name text not null default 'NovaChat user',
+ username text unique,
+ bio text default '',
+ avatar_url text,
+ updated_at timestamptz not null default now()
+);
+alter table public.profiles enable row level security;
+drop policy if exists "Authenticated users read profiles" on public.profiles;
+drop policy if exists "Users create own profile" on public.profiles;
+drop policy if exists "Users update own profile" on public.profiles;
+create policy "Authenticated users read profiles" on public.profiles for select to authenticated using (true);
+create policy "Users create own profile" on public.profiles for insert to authenticated with check (auth.uid()=id);
+create policy "Users update own profile" on public.profiles for update to authenticated using (auth.uid()=id) with check (auth.uid()=id);
