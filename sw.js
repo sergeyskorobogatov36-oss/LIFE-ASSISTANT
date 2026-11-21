@@ -1,4 +1,4 @@
-const CACHE_NAME = "life-assistant-v3";
+const CACHE_NAME = "life-assistant-v4";
 const APP_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", event => {
