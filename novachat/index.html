@@ -57,7 +57,7 @@ let chats=['Личный чат','Компания друзей','Nova Team'];le
 function drawMessages(){$('msgs').innerHTML='';let arr=messages[active]||[];if(!arr.length){$('msgs').innerHTML='<div class="muted">Пока тихо. Напиши первое сообщение.</div>';return}arr.forEach(m=>{let b=document.createElement('div');b.className='bubble mine';b.textContent=m;$('msgs').append(b)});$('msgs').scrollTop=$('msgs').scrollHeight}
 function send(){let t=$('msg').value.trim();if(!active){toast('Сначала выбери чат');return}if(!t)return;(messages[active]??=[]).push(t);localStorage.setItem('nova_messages',JSON.stringify(messages));$('msg').value='';drawMessages()}
 $('msg').addEventListener('keydown',e=>{if(e.key==='Enter')send()});$('audiofile').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;$('player').src=URL.createObjectURL(f);$('track').textContent=f.name;$('player').play().catch(()=>toast('Нажми Play для запуска'))});
-$('nick').value=localStorage.getItem('nova_nick')||'';function saveNick(){let n=$('nick').value.trim();if(!n){toast('Введи имя');return}localStorage.setItem('nova_nick',n);$('profileTitle').textContent=n;toast('Профиль обновлён')}$('profileTitle').textContent=localStorage.getItem('nova_nick')||'Космический гость';
+$('nick').value=localStorage.getItem('nova_nick')||'';async function saveNick(){let n=$('nick').value.trim();if(!n){toast('Введи имя');return}localStorage.setItem('nova_nick',n);$('profileTitle').textContent=n;if(window.novaSaveProfile){await window.novaSaveProfile(n);return}toast('Профиль сохранён на этом устройстве')}$('profileTitle').textContent=localStorage.getItem('nova_nick')||'Космический гость';
 drawChats();drawPosts();drawHomePosts();
 </script>
 <style>
@@ -162,10 +162,23 @@ drawChats();drawPosts();drawHomePosts();
   if(typeof renderStories==='function')renderStories();
  }
  async function syncAll(){
-  const [p,s]=await Promise.all([sb.from('posts').select('*').order('created_at',{ascending:false}).limit(100),sb.from('stories').select('*').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false})]);
-  if(p.error||s.error){say('Ошибка базы. Проверь, что установил SQL-схему NovaChat.');return}
-  remotePosts=p.data||[];remoteStories=s.data||[];drawRemote();
+  const [p,s,profile]=await Promise.all([
+   sb.from('posts').select('*').order('created_at',{ascending:false}).limit(100),
+   sb.from('stories').select('*').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}),
+   sb.from('profiles').select('*').eq('id',user.id).maybeSingle()
+  ]);
+  if(p.error||s.error){say('Ошибка базы. Проверь, что установил актуальную SQL-схему NovaChat.');return}
+  remotePosts=p.data||[];remoteStories=s.data||[];
+  if(profile.data?.display_name){localStorage.setItem('nova_nick',profile.data.display_name);$('nick').value=profile.data.display_name;$('profileTitle').textContent=profile.data.display_name}
+  else if(user){const display=localStorage.getItem('nova_nick')||user.email.split('@')[0];await sb.from('profiles').upsert({id:user.id,display_name:display,updated_at:new Date().toISOString()})}
+  drawRemote();
  }
+ window.novaSaveProfile=async function(displayName){
+  if(!sb||!user){toast('Имя сохранено на этом устройстве. Для облачного профиля войди в аккаунт.');return}
+  const {error}=await sb.from('profiles').upsert({id:user.id,display_name:displayName,updated_at:new Date().toISOString()});
+  if(error){say('Не удалось сохранить облачный профиль: '+error.message);return}
+  say('Профиль обновлён и сохранён в облаке');
+ };
  function subscribe(){
   if(channel)sb.removeChannel(channel);
   channel=sb.channel('nova-live').on('postgres_changes',{event:'*',schema:'public',table:'posts'},syncAll).on('postgres_changes',{event:'*',schema:'public',table:'stories'},syncAll).on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>{if(active)loadCloudMessages(active)}).subscribe();
